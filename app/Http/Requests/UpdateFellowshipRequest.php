@@ -11,7 +11,7 @@ class UpdateFellowshipRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class UpdateFellowshipRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name" => ["required", "string", "max:255"],
+            "email" => ["required", "string", "email:rfc,dns", "max:255"],
+            "phone" => ["required", "string"],
+            "semester" => ["required", "integer", "between:1,8"],
+            "category" => ["required", "string", "in:akademik,nonAkademik,influencer"],
+            "attachment" => ["sometimes", "file", "mimes:pdf,jpg,jpeg,png", "max:2048",], // 2 MB in kilobytes (2048 KB)
         ];
     }
 }

@@ -14,7 +14,7 @@ class FellowshipController extends Controller
 
     public function getCurrentIPK()
     {
-        $current_ipk = 3.1;
+        $current_ipk = 2;
         return $current_ipk;
     }
     /**
@@ -75,13 +75,7 @@ class FellowshipController extends Controller
      */
     public function show(Fellowship $fellowship)
     {
-        $fellowships = Fellowship::orderBy('created_at', 'desc')->get();
-        $categoryLabels = [
-            'akademik' => 'Beasiswa Akademik',
-            'nonAkademik' => 'Beasiswa Non Akademik',
-            'influencer' => 'Beasiswa Influencer',
-        ];
-        return view("result", ["fellowships" => $fellowships, "categoryLabels" => $categoryLabels]);
+        return $this->showResults();
     }
 
     /**
@@ -89,7 +83,7 @@ class FellowshipController extends Controller
      */
     public function edit(Fellowship $fellowship)
     {
-        //
+        return view("edit", ["fellowship" => $fellowship]);
     }
 
     /**
@@ -97,7 +91,28 @@ class FellowshipController extends Controller
      */
     public function update(UpdateFellowshipRequest $request, Fellowship $fellowship)
     {
-        //
+        $fellowship->update([
+            "name" => $request->name,
+            "email" => $request->email,
+            "phone" => $request->phone,
+            "semester" => $request->semester,
+            "IPK" => $request->route('fellowship')->IPK,
+            "category" => $request->category,
+        ]);
+
+
+        if ($request->file('attachment')) {
+            $ext      = $request->file('attachment')->extension();
+            $contents = file_get_contents($request->file('attachment'));
+            $filename = Str::random(25);
+            $path     = "attachments/$filename.$ext";
+            Storage::disk('public')->put($path, $contents);
+            $fellowship->update(['attachment' => $path]);
+        }
+
+
+
+        return $this->showResults();
     }
 
     /**
@@ -105,6 +120,20 @@ class FellowshipController extends Controller
      */
     public function destroy(Fellowship $fellowship)
     {
-        //
+        $fellowship->delete();
+        return $this->showResults();
+    }
+
+
+    private function showResults()
+    {
+        $fellowships = Fellowship::orderBy('created_at', 'desc')->get();
+        $categoryLabels = [
+            'akademik' => 'Beasiswa Akademik',
+            'nonAkademik' => 'Beasiswa Non Akademik',
+            'influencer' => 'Beasiswa Influencer',
+        ];
+
+        return view("result", ["fellowships" => $fellowships, "categoryLabels" => $categoryLabels]);
     }
 }
