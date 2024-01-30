@@ -32,4 +32,4 @@ Aplikasi Beasiswa ini dikembangkan menggunakan Laravel dan memerlukan beberapa l
 -   Pastikan Anda menjalankan `npm run dev` setiap kali ada perubahan pada file CSS atau JavaScript untuk Tailwind CSS.
 -   Harap sesuaikan panduan ini sesuai dengan kebutuhan dan konfigurasi spesifik proyek Anda.
 
-Selamat menggunakan aplikasi Beasiswa! Jika Anda memiliki pertanyaan atau masalah, jangan ragu untuk menghubungi kami.
+Selamat menggunakan aplikasi Beasiswa! 
